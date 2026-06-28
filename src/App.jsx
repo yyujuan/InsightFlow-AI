@@ -133,6 +133,7 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [showSettings, setShowSettings] = useState(false);
+  const [showSetupModal, setShowSetupModal] = useState(false);
 
   useEffect(() => { injectPrintStyle(); }, []);
 
@@ -221,6 +222,36 @@ export default function App() {
 
   const goDemo = () => { setResult(mockResult); setPage("result"); };
 
+  if (showSetupModal) return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ background: COLORS.white, borderRadius: 16, padding: "36px 32px", width: 480, boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: COLORS.navy, margin: "0 0 8px" }}>先告诉我你的公司背景</h2>
+        <p style={{ fontSize: 13, color: COLORS.muted, margin: "0 0 20px", lineHeight: 1.6 }}>帮助 AI 更准确地理解你的业务场景，可随时跳过。</p>
+        <textarea
+          value={form.company_context}
+          onChange={(e) => { saveCompanyContext(e.target.value); setForm(f => ({ ...f, company_context: e.target.value })); }}
+          placeholder="例如：B2B SaaS 项目管理平台，面向欧美和东南亚企业客户"
+          rows={4}
+          style={{ width: "100%", border: `1px solid ${COLORS.border}`, borderRadius: 8, padding: "10px 12px", fontSize: 13, color: COLORS.text, resize: "none", fontFamily: "inherit", boxSizing: "border-box", outline: "none", lineHeight: 1.6 }}
+        />
+        <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+          <button
+            onClick={() => { setShowSetupModal(false); setPage("analyze"); }}
+            style={{ flex: 1, background: COLORS.navy, color: COLORS.white, border: "none", borderRadius: 8, padding: "12px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+          >
+            确认，开始分析 →
+          </button>
+          <button
+            onClick={() => { setShowSetupModal(false); setPage("analyze"); }}
+            style={{ background: "transparent", color: COLORS.muted, border: `1px solid ${COLORS.border}`, borderRadius: 8, padding: "12px 20px", fontSize: 13, cursor: "pointer" }}
+          >
+            跳过
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   if (showSettings) {
     return (
       <SettingsPage
@@ -230,7 +261,7 @@ export default function App() {
       />
     );
   }
-  if (page === "home") return <HomePage onStart={() => setPage("analyze")} onDemo={goDemo} onSettings={() => setShowSettings(true)} />;
+  if (page === "home") return <HomePage onStart={() => setShowSetupModal(true)} onDemo={goDemo} onSettings={() => setShowSettings(true)} />;
   if (page === "analyze") return (
     <AnalyzePage
       form={form}
