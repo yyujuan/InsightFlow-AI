@@ -3,7 +3,7 @@ import Papa from "papaparse";
 import * as XLSX from "xlsx";
 
 const DIFY_API_URL = "https://api.dify.ai/v1/workflows/run";
-const DIFY_API_KEY = "app-uXltwnmM7wBNMN3iijKDZqSr";
+const API_KEY = import.meta.env.VITE_DIFY_API_KEY;
 
 const COLORS = {
   navy: "#1B3A6B",
